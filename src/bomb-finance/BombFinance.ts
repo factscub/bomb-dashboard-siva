@@ -571,6 +571,9 @@ export class BombFinance {
     const BSHAREPrice = (await this.getShareStat()).priceInDollars;
     const BOMBPrice = (await this.getBombStat()).priceInDollars;
 
+    console.log('BSHAREPrice',BSHAREPrice)
+    console.log('BOMBPrice',BOMBPrice)
+
     const boardroomtShareBalanceOf = await this.BSHARE.balanceOf(this.currentBoardroom().address);
     const bombStakeBalanceOf = await this.BOMB.balanceOf(this.XBOMB.address);
 
@@ -578,6 +581,14 @@ export class BombFinance {
     const bombTVL = Number(getDisplayBalance(bombStakeBalanceOf, this.BOMB.decimal)) * Number(BOMBPrice);
 
     return totalValue + boardroomTVL + bombTVL;
+  }
+
+  // boardroomTVL
+  async getboardroomTVL():Promise<Number>{
+    const BSHAREPrice = (await this.getShareStat()).priceInDollars;
+    const boardroomtShareBalanceOf = await this.BSHARE.balanceOf(this.currentBoardroom().address);
+    const boardroomTVL = Number(getDisplayBalance(boardroomtShareBalanceOf, this.BSHARE.decimal)) * Number(BSHAREPrice);
+    return boardroomTVL;
   }
 
   /**

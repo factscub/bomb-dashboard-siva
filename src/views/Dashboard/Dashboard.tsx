@@ -18,7 +18,20 @@ import useCashPriceInEstimatedTWAP from '../../hooks/useCashPriceInEstimatedTWAP
 import useCashPriceInLastTWAP from '../../hooks/useCashPriceInLastTWAP';
 
 import ProgressCountdown from '../Boardroom/components/ProgressCountdown';
+import BoxHeading from '../../components/BoxHeading';
 
+import bshareIcon from '../../assets/img/bshares.png';
+import useTotalStakedOnBoardroom from '../../hooks/useTotalStakedOnBoardroom';
+import { getDisplayBalance } from '../../utils/formatBalance';
+import useBoardroomTVL from '../../hooks/useBoardroomTVL';
+import { roundAndFormatNumber } from '../../0x';
+import useFetchBoardroomAPR from '../../hooks/useFetchBoardroomAPR';
+import useEarningsOnBoardroom from '../../hooks/useEarningsOnBoardroom';
+import useBombStats from '../../hooks/useBombStats';
+import useStakedBalanceOnBoardroom from '../../hooks/useStakedBalanceOnBoardroom';
+import useStakedTokenPriceInDollars from '../../hooks/useStakedTokenPriceInDollars';
+import useBombFinance from '../../hooks/useBombFinance';
+import BombDetails from '../../components/BombDetails';
 const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) repeat !important;
@@ -48,9 +61,39 @@ const Dashboard: React.FC = () => {
   const { to } = useTreasuryAllocationTimes();
   const cashStat = useCashPriceInEstimatedTWAP();
   const cashPrice = useCashPriceInLastTWAP();
+  const totalStaked = useTotalStakedOnBoardroom();
+  const boardroomTVL = useBoardroomTVL();
+  const boardroomAPR = useFetchBoardroomAPR();
+
+  const bombStats = useBombStats();
+  const boardroomEarnings = useEarningsOnBoardroom();
+  const boardroomBombTokenPriceInDollars = React.useMemo(
+    () => (bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null),
+    [bombStats],
+  );
+  const boardroomEarnedInDollars = (
+    Number(boardroomBombTokenPriceInDollars) * Number(getDisplayBalance(boardroomEarnings))
+  ).toFixed(2);
+
+  const bombFinance = useBombFinance();
+  const boardroomStakedBalance = useStakedBalanceOnBoardroom();
+  const stakedTokenPriceInDollars = useStakedTokenPriceInDollars('BSHARE', bombFinance.BSHARE);
+  const boardroomBshareTokenPriceInDollars = React.useMemo(
+    () =>
+      stakedTokenPriceInDollars
+        ? (Number(stakedTokenPriceInDollars) * Number(getDisplayBalance(boardroomStakedBalance))).toFixed(2).toString()
+        : null,
+    [stakedTokenPriceInDollars, boardroomStakedBalance],
+  );
 
   const liveTWAP = React.useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(2) : null), [cashStat]);
   const lastTWAP = React.useMemo(() => (cashPrice ? Number(cashPrice) : null), [cashPrice]);
+  const boardroomDailyReturns = React.useMemo(
+    () => (boardroomAPR ? Number(boardroomAPR / 365).toFixed(1) : null),
+    [boardroomAPR],
+  );
+
+  // console.log(boardroomDailyReturns);
 
   return (
     <Page>
@@ -104,7 +147,74 @@ const Dashboard: React.FC = () => {
         </Box>
 
         {/* second box */}
-        <Box style={boxStyles}></Box>
+        <Box
+          style={{
+            ...boxStyles,
+            border: 0,
+            background: 'transparent',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Box style={{ width: '60%', textAlign: 'center' }}>
+            <Typography style={{ textAlign: 'right' }}>
+              <a style={{ color: '#9EE6FF' }} href="/">
+                Read Investment Strategy
+              </a>
+            </Typography>
+            <Typography
+              style={{
+                fontSize: 24,
+                fontWeight: 800,
+                color: 'white',
+                margin: '10px 0',
+                background:
+                  'radial-gradient(59345.13% 4094144349.28% at 39511.5% -2722397851.45%, rgba(0, 245, 171, 0.5) 0%, rgba(0, 173, 232, 0.5) 100%)',
+              }}
+            >
+              Invest Now
+            </Typography>
+            <Box display="flex" justifyContent="space-between">
+              {' '}
+              <Typography style={{ width: '48%', background: 'blue' }}>df</Typography>
+              <Typography style={{ width: '48%', background: 'blue' }}>df</Typography>
+            </Box>
+
+            {/* Boardroom box */}
+            <Box style={{ ...boxStyles }}>
+              <BoxHeading
+                heading="Boardroom"
+                description="Stake BSHARE and earn BOMB every epoch"
+                icon={bshareIcon}
+                showWrapper={true}
+                tvl={roundAndFormatNumber(Number(boardroomTVL), 0)}
+              />
+              <Typography style={{ display: 'flex', justifyContent: 'flex-end', padding: 5 }}>
+                Total Staked:{' '}
+                <Box style={{ width: 20 }}>
+                  <img style={{ maxWidth: '100%' }} src={bshareIcon} alt="img" />
+                </Box>{' '}
+                {Number(getDisplayBalance(totalStaked)).toFixed(0)}
+              </Typography>
+
+              {/* boardroom bombdetails */}
+              <BombDetails
+                dailyReturns={Number(boardroomDailyReturns)}
+                stake={boardroomStakedBalance}
+                stakedInDollars={Number(boardroomBshareTokenPriceInDollars)}
+                earned={boardroomEarnings}
+                earnedInDollars={Number(boardroomEarnedInDollars)}
+                stakeIcon="BSHARE"
+                earnedIcon="BOMB"
+              />
+            </Box>
+          </Box>
+
+          {/* Empty box for latest news */}
+          <Box style={{ ...boxStyles, padding: '10px 20px', width: '35%' }}>
+            <Typography>Latest News</Typography>
+          </Box>
+        </Box>
 
         {/* third box */}
         <Box style={boxStyles}></Box>
