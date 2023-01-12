@@ -19,6 +19,7 @@ import useCashPriceInLastTWAP from '../../hooks/useCashPriceInLastTWAP';
 
 import ProgressCountdown from '../Boardroom/components/ProgressCountdown';
 
+import useBondStats from '../../hooks/useBondStats';
 import useTotalStakedOnBoardroom from '../../hooks/useTotalStakedOnBoardroom';
 import { getDisplayBalance } from '../../utils/formatBalance';
 import useBoardroomTVL from '../../hooks/useBoardroomTVL';
@@ -32,6 +33,10 @@ import useBombFinance from '../../hooks/useBombFinance';
 import BombDetails from '../../components/BombDetails';
 import TokenSymbol from '../../components/TokenSymbol';
 import BoxHeading from '../../components/BoxHeading';
+import useTokenBalance from '../../hooks/useTokenBalance';
+// import FancyButton from '../../components/FancyButton';
+import Bond from './components/Bond';
+
 const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) repeat !important;
@@ -64,6 +69,10 @@ const Dashboard: React.FC = () => {
   const totalStaked = useTotalStakedOnBoardroom();
   const boardroomTVL = useBoardroomTVL();
   const boardroomAPR = useFetchBoardroomAPR();
+  const bondStat = useBondStats();
+  const bombFinance = useBombFinance();
+
+  const bondBalance = useTokenBalance(bombFinance?.BBOND);
 
   const bombStats = useBombStats();
   const boardroomEarnings = useEarningsOnBoardroom();
@@ -75,7 +84,6 @@ const Dashboard: React.FC = () => {
     Number(boardroomBombTokenPriceInDollars) * Number(getDisplayBalance(boardroomEarnings))
   ).toFixed(2);
 
-  const bombFinance = useBombFinance();
   const boardroomStakedBalance = useStakedBalanceOnBoardroom();
   const stakedTokenPriceInDollars = useStakedTokenPriceInDollars('BSHARE', bombFinance.BSHARE);
   const boardroomBshareTokenPriceInDollars = React.useMemo(
@@ -296,14 +304,9 @@ const Dashboard: React.FC = () => {
         </Box>
 
         {/* forth box */}
-        <Box style={boxStyles}>
-          <BoxHeading
-            symbolSize={50}
-            heading="Bonds"
-            description="BBOND can be purchased only on contraction periods, when TWAP of BOMB is below 1"
-            symbol="BBOND"
-          />
-        </Box>
+        <Bond />
+
+        
       </Container>
     </Page>
   );

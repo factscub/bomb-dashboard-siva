@@ -20,6 +20,10 @@ import bombBtcLp from '../../assets/img/bomb-btc-lp-512.png';
 import bnbLogo from '../../assets/img/bnb.png';
 import btcLogo from '../../assets/img/BCTB-icon.png';
 
+import up from '../../assets/img/up.png';
+import down from '../../assets/img/down.png';
+import cart from '../../assets/img/cart.png';
+
 const logosBySymbol: {[title: string]: string} = {
   //Real tokens
   //=====================
@@ -54,8 +58,13 @@ const logosBySymbol: {[title: string]: string} = {
   'BSHARE-BNB-APELP': bshareFtmLpLogo,
   'BOMB-BTCB-APELP': bombFtmLpLogo,
 
-  'BBOND-FARM':bombBtcLp
+  'BBOND-FARM':bombBtcLp,
+
+  UP:up,
+  DOWN:down,
+  CART:cart
 };
+
 
 type LogoProps = {
   symbol: string;
