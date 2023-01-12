@@ -3,13 +3,14 @@ import TokenSymbol from '../TokenSymbol';
 
 interface Props {
   onClick?: () => void;
-  width?: number;
+  width?: string;
   disabled?: boolean;
   text: string;
   symbol?: string;
+  marginLeft?:number
 }
 
-const FancyButton: React.FC<Props> = ({ onClick, text, width, symbol = 'BSHARE', disabled = false }) => {
+const FancyButton: React.FC<Props> = ({ marginLeft, onClick, text, width, symbol = 'BSHARE', disabled = false }) => {
   return (
     <button
       onClick={onClick}
@@ -17,10 +18,11 @@ const FancyButton: React.FC<Props> = ({ onClick, text, width, symbol = 'BSHARE',
         width: width,
         minWidth: 110,
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: width ? 'center' : 'space-between',
         alignItems: 'center',
         borderRadius: '25px',
         padding: '5px',
+        marginLeft:marginLeft ? marginLeft : 0,
         background: 'transparent',
         cursor: 'pointer',
         border: disabled ? '1px solid rgba(255, 255, 255, 0.5)' : '1px solid white',
@@ -28,7 +30,7 @@ const FancyButton: React.FC<Props> = ({ onClick, text, width, symbol = 'BSHARE',
       }}
       disabled={disabled}
     >
-      <p style={{ margin: '0 0 0 5px' }}>{text}</p>
+      <p style={{ margin: '0 15px 0 5px' }}>{text}</p>
       <p
         style={{
           padding: 5,

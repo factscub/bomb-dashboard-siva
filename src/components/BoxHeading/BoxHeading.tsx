@@ -1,5 +1,6 @@
 import { Box, Typography } from '@material-ui/core';
 import React from 'react';
+import { roundAndFormatNumber } from '../../0x';
 import TokenSymbol from '../TokenSymbol';
 
 type BoxHeading = {
@@ -55,7 +56,11 @@ const BoxHeading: React.FC<BoxHeading> = ({
           {!!description && <Typography>{description}</Typography>}{' '}
         </Box>
       </Box>
-      {!!tvl && <Box style={{ display: 'flex', alignItems: 'flex-end', paddingRight: 10 }}>TVL: ${tvl}</Box>}{' '}
+      {!!tvl && (
+        <Box style={{ display: 'flex', alignItems: 'flex-end', paddingRight: 10 }}>
+          TVL: ${roundAndFormatNumber(Number(tvl), 0)}
+        </Box>
+      )}{' '}
     </Box>
   );
 };

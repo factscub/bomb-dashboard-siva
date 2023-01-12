@@ -11,6 +11,7 @@ type BombDetails = {
   earned: BigNumber;
   earnedIcon: string;
   earnedInDollars: string;
+  children?:React.ReactNode;
 };
 
 const BombDetails: React.FC<BombDetails> = ({
@@ -21,6 +22,7 @@ const BombDetails: React.FC<BombDetails> = ({
   earned,
   earnedIcon,
   earnedInDollars,
+  children
 }) => {
   return (
     <Box style={{ textAlign: 'center', margin: '10px 0', display: 'flex', justifyContent: 'space-between' }}>
@@ -35,7 +37,7 @@ const BombDetails: React.FC<BombDetails> = ({
         {/* your stake box */}
         <Box style={{ marginRight: 50 }}>
           <Typography>Your Stake:</Typography>
-          <Box style={{ display: 'flex' }}>
+          <Box style={{ display: 'flex', alignItems:'center' }}>
             <TokenSymbol symbol={stakeIcon} size={16} />{' '}
             {/* <img style={{ width: 16, height: 16 }} src={stakeIcon} alt="img" /> */}
             <Typography>{getDisplayBalance(stake)}</Typography>
@@ -46,7 +48,7 @@ const BombDetails: React.FC<BombDetails> = ({
         {/* earned box */}
         <Box style={{ marginRight: 30 }}>
           <Typography>Earned:</Typography>
-          <Box style={{ display: 'flex' }}>
+          <Box style={{ display: 'flex', alignItems:'center' }}>
             <TokenSymbol symbol={earnedIcon} size={16} /> {/* <img src={earnedIcon} alt="img" /> */}
             <Typography>{getDisplayBalance(earned)}</Typography>
           </Box>
@@ -55,7 +57,9 @@ const BombDetails: React.FC<BombDetails> = ({
       </Box>
 
       {/* Buttons box */}
-      <Box></Box>
+      {
+        children
+      }
     </Box>
   );
 };

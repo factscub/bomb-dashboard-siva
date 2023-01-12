@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 import CountUp from 'react-countup';
 import moment from 'moment';
@@ -19,11 +19,11 @@ import useCashPriceInLastTWAP from '../../hooks/useCashPriceInLastTWAP';
 
 import ProgressCountdown from '../Boardroom/components/ProgressCountdown';
 
-import useBondStats from '../../hooks/useBondStats';
+// import useBondStats from '../../hooks/useBondStats';
 import useTotalStakedOnBoardroom from '../../hooks/useTotalStakedOnBoardroom';
 import { getDisplayBalance } from '../../utils/formatBalance';
 import useBoardroomTVL from '../../hooks/useBoardroomTVL';
-import { roundAndFormatNumber } from '../../0x';
+// import { roundAndFormatNumber } from '../../0x';
 import useFetchBoardroomAPR from '../../hooks/useFetchBoardroomAPR';
 import useEarningsOnBoardroom from '../../hooks/useEarningsOnBoardroom';
 import useBombStats from '../../hooks/useBombStats';
@@ -33,9 +33,11 @@ import useBombFinance from '../../hooks/useBombFinance';
 import BombDetails from '../../components/BombDetails';
 import TokenSymbol from '../../components/TokenSymbol';
 import BoxHeading from '../../components/BoxHeading';
-import useTokenBalance from '../../hooks/useTokenBalance';
+// import useTokenBalance from '../../hooks/useTokenBalance';
 // import FancyButton from '../../components/FancyButton';
 import Bond from './components/Bond';
+import { BombFarms } from './components/BombFarms';
+import { Boardroom } from './components/Boardroom';
 
 const BackgroundImage = createGlobalStyle`
   body {
@@ -67,12 +69,9 @@ const Dashboard: React.FC = () => {
   const cashStat = useCashPriceInEstimatedTWAP();
   const cashPrice = useCashPriceInLastTWAP();
   const totalStaked = useTotalStakedOnBoardroom();
-  const boardroomTVL = useBoardroomTVL();
+  const boardroomTVL = useBoardroomTVL().toString();
   const boardroomAPR = useFetchBoardroomAPR();
-  const bondStat = useBondStats();
   const bombFinance = useBombFinance();
-
-  const bondBalance = useTokenBalance(bombFinance?.BBOND);
 
   const bombStats = useBombStats();
   const boardroomEarnings = useEarningsOnBoardroom();
@@ -94,57 +93,12 @@ const Dashboard: React.FC = () => {
     [stakedTokenPriceInDollars, boardroomStakedBalance],
   );
 
-  console.log(getDisplayBalance(boardroomStakedBalance));
-
   const liveTWAP = React.useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(2) : null), [cashStat]);
   const lastTWAP = React.useMemo(() => (cashPrice ? Number(cashPrice) : null), [cashPrice]);
   const boardroomDailyReturns = React.useMemo(
-    () => (boardroomAPR ? Number(boardroomAPR / 365).toFixed(1) : null),
+    () => (boardroomAPR ? Number(boardroomAPR / 365).toFixed(2) : null),
     [boardroomAPR],
   );
-
-  const [bomFarmsArray] = useState([
-    {
-      symbol: 'BOMB-BTCB-LP',
-      showWrapper: true,
-      tvl: '34,545',
-      heading: 'BOMB-BTCB',
-      dailyReturns: '0.4',
-      stake: boardroomStakedBalance,
-      stakedInDollars: '435',
-      stakeIcon: 'BOMB-BTCB-LP',
-      earned: boardroomEarnings,
-      earnedIcon: 'BSHARE',
-      earnedInDollars: '343',
-    },
-    {
-      symbol: 'BSHARE-BNB-LP',
-      showWrapper: true,
-      tvl: '634,545',
-      heading: 'BSHARE-BNB',
-      dailyReturns: '1.4',
-      stake: boardroomStakedBalance,
-      stakedInDollars: '435',
-      stakeIcon: 'BSHARE-BNB-LP',
-      earned: boardroomEarnings,
-      earnedIcon: 'BSHARE',
-      earnedInDollars: '6343',
-    },
-    {
-      symbol: 'BBOND-FARM',
-      showWrapper: true,
-      tvl: '634,545',
-      heading: 'BBOND',
-      dailyReturns: '3.4',
-      stake: boardroomStakedBalance,
-      stakedInDollars: '435',
-      stakeIcon: 'BBOND-FARM',
-      earned: boardroomEarnings,
-      earnedIcon: 'BSHARE',
-      earnedInDollars: '6343',
-    },
-  ]);
-  // console.log(boardroomDailyReturns);
 
   return (
     <Page>
@@ -198,115 +152,12 @@ const Dashboard: React.FC = () => {
         </Box>
 
         {/* second box */}
-        <Box
-          style={{
-            ...boxStyles,
-            border: 0,
-            margin: 0,
-            padding: 0,
-            background: 'transparent',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Box style={{ width: '60%', textAlign: 'center' }}>
-            <Typography style={{ textAlign: 'right' }}>
-              <a style={{ color: '#9EE6FF' }} href="/">
-                Read Investment Strategy
-              </a>
-            </Typography>
-            <Typography
-              style={{
-                fontSize: 24,
-                fontWeight: 800,
-                color: 'white',
-                margin: '10px 0',
-                background:
-                  'radial-gradient(59345.13% 4094144349.28% at 39511.5% -2722397851.45%, rgba(0, 245, 171, 0.5) 0%, rgba(0, 173, 232, 0.5) 100%)',
-              }}
-            >
-              Invest Now
-            </Typography>
-            <Box display="flex" justifyContent="space-between">
-              {' '}
-              <Typography style={{ width: '48%', background: 'blue' }}>df</Typography>
-              <Typography style={{ width: '48%', background: 'blue' }}>df</Typography>
-            </Box>
-
-            {/* Boardroom box */}
-            <Box style={{ ...boxStyles }}>
-              <BoxHeading
-                symbolSize={50}
-                borderBottom={true}
-                heading="Boardroom"
-                description="Stake BSHARE and earn BOMB every epoch"
-                symbol="BSHARE"
-                showWrapper={true}
-                tvl={roundAndFormatNumber(Number(boardroomTVL), 0)}
-              />
-              <Typography style={{ display: 'flex', justifyContent: 'flex-end', padding: 5 }}>
-                Total Staked:{' '}
-                <Box style={{ width: 20 }}>
-                  <TokenSymbol size={20} symbol="BSHARE" />
-                  {/* <img style={{ maxWidth: '100%' }} src={bshareIcon} alt="img" /> */}
-                </Box>{' '}
-                {Number(getDisplayBalance(totalStaked)).toFixed(0)}
-              </Typography>
-
-              {/* boardroom bombdetails */}
-              <BombDetails
-                dailyReturns={boardroomDailyReturns}
-                stake={boardroomStakedBalance}
-                stakedInDollars={boardroomBshareTokenPriceInDollars}
-                earned={boardroomEarnings}
-                earnedInDollars={boardroomEarnedInDollars}
-                stakeIcon="BSHARE"
-                earnedIcon="BOMB"
-              />
-            </Box>
-          </Box>
-
-          {/* Empty box for latest news */}
-          <Box style={{ ...boxStyles, padding: '10px 20px', width: '35%' }}>
-            <Typography>Latest News</Typography>
-          </Box>
-        </Box>
-
+        <Boardroom />
         {/* third box */}
-        <Box style={boxStyles}>
-          <BoxHeading heading="Bomb Farms" description="Stake your LP tokens in our farms to start earning $BSHARE" />
+        <BombFarms />
 
-          {bomFarmsArray.map((obj, i) => {
-            // boxheading details
-            const { heading, tvl, showWrapper, symbol } = obj;
-
-            // bombdetails
-
-            const { dailyReturns, stake, stakedInDollars, stakeIcon, earned, earnedInDollars, earnedIcon } = obj;
-
-            return (
-              <React.Fragment key={i}>
-                <BoxHeading
-                  marginTop={15}
-                  heading={heading}
-                  tvl={tvl}
-                  showWrapper={showWrapper}
-                  symbol={symbol}
-                  symbolSize={35}
-                  borderBottom={true}
-                />
-                <BombDetails
-                  {...{ dailyReturns, stake, stakedInDollars, stakeIcon, earned, earnedInDollars, earnedIcon }}
-                />
-              </React.Fragment>
-            );
-          })}
-        </Box>
-
-        {/* forth box */}
+        {/* forth box i.e, bonds */}
         <Bond />
-
-        
       </Container>
     </Page>
   );
