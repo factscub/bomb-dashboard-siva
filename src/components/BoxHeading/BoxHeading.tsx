@@ -6,26 +6,34 @@ type BoxHeading = {
   symbol?: string;
   showWrapper?: boolean;
   tvl?: string;
-  description: string;
+  description?: string;
   heading: string;
+  symbolSize?: number;
+  marginTop?: number;
+  borderBottom?: boolean;
 };
 
-const BoxHeading: React.FC<BoxHeading> = ({ symbol, showWrapper, tvl, description, heading }) => {
+const BoxHeading: React.FC<BoxHeading> = ({
+  marginTop,
+  borderBottom,
+  symbolSize,
+  symbol,
+  showWrapper,
+  tvl,
+  description,
+  heading,
+}) => {
   return (
     <Box
       style={{
         display: 'flex',
         justifyContent: 'space-between',
-        borderBottom: '0.5px solid rgba(195, 197, 203, 0.75)',
+        borderBottom: borderBottom ? '0.5px solid rgba(195, 197, 203, 0.75)' : 0,
+        marginTop,
       }}
     >
       <Box style={{ display: 'flex', alignItems: 'center' }}>
-        {!!symbol && (
-          <Box style={{ minHeight: 35, maxWidth: 50 }}>
-            <TokenSymbol symbol={symbol} size={50}/>
-            {/* <img style={{ maxWidth: '100%' }} src={symbol} alt="img" /> */}
-          </Box>
-        )}
+        {!!symbol && <TokenSymbol symbol={symbol} size={symbolSize ? symbolSize : 35} />}
 
         <Box style={{ marginLeft: 10 }}>
           <Box style={{ display: 'flex', alignItems: 'center' }}>
@@ -47,7 +55,7 @@ const BoxHeading: React.FC<BoxHeading> = ({ symbol, showWrapper, tvl, descriptio
           {!!description && <Typography>{description}</Typography>}{' '}
         </Box>
       </Box>
-      {!!tvl && <Box style={{ display: 'flex', alignItems: 'flex-end', paddingRight: 10 }}>TVL:{' '}${tvl}</Box>}{' '}
+      {!!tvl && <Box style={{ display: 'flex', alignItems: 'flex-end', paddingRight: 10 }}>TVL: ${tvl}</Box>}{' '}
     </Box>
   );
 };

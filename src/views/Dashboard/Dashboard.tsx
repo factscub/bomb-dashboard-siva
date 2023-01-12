@@ -18,9 +18,7 @@ import useCashPriceInEstimatedTWAP from '../../hooks/useCashPriceInEstimatedTWAP
 import useCashPriceInLastTWAP from '../../hooks/useCashPriceInLastTWAP';
 
 import ProgressCountdown from '../Boardroom/components/ProgressCountdown';
-import BoxHeading from '../../components/BoxHeading';
 
-import bshareIcon from '../../assets/img/bshares.png';
 import useTotalStakedOnBoardroom from '../../hooks/useTotalStakedOnBoardroom';
 import { getDisplayBalance } from '../../utils/formatBalance';
 import useBoardroomTVL from '../../hooks/useBoardroomTVL';
@@ -33,6 +31,7 @@ import useStakedTokenPriceInDollars from '../../hooks/useStakedTokenPriceInDolla
 import useBombFinance from '../../hooks/useBombFinance';
 import BombDetails from '../../components/BombDetails';
 import TokenSymbol from '../../components/TokenSymbol';
+import BoxHeading from '../../components/BoxHeading';
 const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) repeat !important;
@@ -87,6 +86,8 @@ const Dashboard: React.FC = () => {
     [stakedTokenPriceInDollars, boardroomStakedBalance],
   );
 
+  console.log(getDisplayBalance(boardroomStakedBalance));
+
   const liveTWAP = React.useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(2) : null), [cashStat]);
   const lastTWAP = React.useMemo(() => (cashPrice ? Number(cashPrice) : null), [cashPrice]);
   const boardroomDailyReturns = React.useMemo(
@@ -94,8 +95,47 @@ const Dashboard: React.FC = () => {
     [boardroomAPR],
   );
 
-
-  const [bomFarmsArray, setBombFarmsArray]= useState([])
+  const [bomFarmsArray] = useState([
+    {
+      symbol: 'BOMB-BTCB-LP',
+      showWrapper: true,
+      tvl: '34,545',
+      heading: 'BOMB-BTCB',
+      dailyReturns: '0.4',
+      stake: boardroomStakedBalance,
+      stakedInDollars: '435',
+      stakeIcon: 'BOMB-BTCB-LP',
+      earned: boardroomEarnings,
+      earnedIcon: 'BSHARE',
+      earnedInDollars: '343',
+    },
+    {
+      symbol: 'BSHARE-BNB-LP',
+      showWrapper: true,
+      tvl: '634,545',
+      heading: 'BSHARE-BNB',
+      dailyReturns: '1.4',
+      stake: boardroomStakedBalance,
+      stakedInDollars: '435',
+      stakeIcon: 'BSHARE-BNB-LP',
+      earned: boardroomEarnings,
+      earnedIcon: 'BSHARE',
+      earnedInDollars: '6343',
+    },
+    {
+      symbol: 'BBOND-FARM',
+      showWrapper: true,
+      tvl: '634,545',
+      heading: 'BBOND',
+      dailyReturns: '3.4',
+      stake: boardroomStakedBalance,
+      stakedInDollars: '435',
+      stakeIcon: 'BBOND-FARM',
+      earned: boardroomEarnings,
+      earnedIcon: 'BSHARE',
+      earnedInDollars: '6343',
+    },
+  ]);
   // console.log(boardroomDailyReturns);
 
   return (
@@ -154,8 +194,8 @@ const Dashboard: React.FC = () => {
           style={{
             ...boxStyles,
             border: 0,
-            margin:0,
-            padding:0,
+            margin: 0,
+            padding: 0,
             background: 'transparent',
             display: 'flex',
             justifyContent: 'space-between',
@@ -188,16 +228,18 @@ const Dashboard: React.FC = () => {
             {/* Boardroom box */}
             <Box style={{ ...boxStyles }}>
               <BoxHeading
+                symbolSize={50}
+                borderBottom={true}
                 heading="Boardroom"
                 description="Stake BSHARE and earn BOMB every epoch"
-                symbol='BSHARE'
+                symbol="BSHARE"
                 showWrapper={true}
                 tvl={roundAndFormatNumber(Number(boardroomTVL), 0)}
               />
               <Typography style={{ display: 'flex', justifyContent: 'flex-end', padding: 5 }}>
                 Total Staked:{' '}
                 <Box style={{ width: 20 }}>
-                  <TokenSymbol size={20} symbol='BSHARE' />
+                  <TokenSymbol size={20} symbol="BSHARE" />
                   {/* <img style={{ maxWidth: '100%' }} src={bshareIcon} alt="img" /> */}
                 </Box>{' '}
                 {Number(getDisplayBalance(totalStaked)).toFixed(0)}
@@ -205,11 +247,11 @@ const Dashboard: React.FC = () => {
 
               {/* boardroom bombdetails */}
               <BombDetails
-                dailyReturns={Number(boardroomDailyReturns)}
+                dailyReturns={boardroomDailyReturns}
                 stake={boardroomStakedBalance}
-                stakedInDollars={Number(boardroomBshareTokenPriceInDollars)}
+                stakedInDollars={boardroomBshareTokenPriceInDollars}
                 earned={boardroomEarnings}
-                earnedInDollars={Number(boardroomEarnedInDollars)}
+                earnedInDollars={boardroomEarnedInDollars}
                 stakeIcon="BSHARE"
                 earnedIcon="BOMB"
               />
@@ -224,21 +266,42 @@ const Dashboard: React.FC = () => {
 
         {/* third box */}
         <Box style={boxStyles}>
+          <BoxHeading heading="Bomb Farms" description="Stake your LP tokens in our farms to start earning $BSHARE" />
 
+          {bomFarmsArray.map((obj, i) => {
+            // boxheading details
+            const { heading, tvl, showWrapper, symbol } = obj;
 
-          <BoxHeading heading='Bomb Farms' description='Stake your LP tokens in our farms to start earning $BSHARE' />
+            // bombdetails
 
-          {
-            bomFarmsArray.map((bombObject,i)=>{
+            const { dailyReturns, stake, stakedInDollars, stakeIcon, earned, earnedInDollars, earnedIcon } = obj;
 
-            })
-          }
+            return (
+              <React.Fragment key={i}>
+                <BoxHeading
+                  marginTop={15}
+                  heading={heading}
+                  tvl={tvl}
+                  showWrapper={showWrapper}
+                  symbol={symbol}
+                  symbolSize={35}
+                  borderBottom={true}
+                />
+                <BombDetails
+                  {...{ dailyReturns, stake, stakedInDollars, stakeIcon, earned, earnedInDollars, earnedIcon }}
+                />
+              </React.Fragment>
+            );
+          })}
         </Box>
 
         {/* forth box */}
         <Box style={boxStyles}>
-          <BoxHeading heading='Bonds' description='BBOND can be purchased only on contraction periods, when TWAP of BOMB is below 1'
-          symbol='BBOND'
+          <BoxHeading
+            symbolSize={50}
+            heading="Bonds"
+            description="BBOND can be purchased only on contraction periods, when TWAP of BOMB is below 1"
+            symbol="BBOND"
           />
         </Box>
       </Container>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Box } from '@material-ui/core';
 import useBombFinance from '../../hooks/useBombFinance';
 import { numberFormater } from '../../utils/numberFormater';
+import TokenSymbol from '../TokenSymbol';
 
 interface Props {
   bombsArray: {
@@ -48,7 +49,8 @@ export const Table: React.FC<Props> = ({ bombsArray }) => {
                       padding: 2,
                     }}
                   >
-                    <img style={{ maxWidth: '100%' }} src={bomb.icon} alt="img" />
+                    <TokenSymbol symbol={bomb.name} size={25} />
+                    {/* <img style={{ maxWidth: '100%' }} src={bomb.icon} alt="img" /> */}
                   </span>
                   <span style={{ fontSize: 12 }}>${bomb.name}</span>
                 </Box>
@@ -56,12 +58,13 @@ export const Table: React.FC<Props> = ({ bombsArray }) => {
               <td style={{ padding: '0 10px 5px 10px' }}>{numberFormater(Number(bomb.currentSupply))}</td>
               <td style={{ padding: '0 10px 5px 10px' }}>{numberFormater(Number(bomb.totalSupply))}</td>
               <td style={{ padding: '0 10px 5px 10px' }}>
-                <p style={{margin:0}}>{bomb.priceInDollars}</p>
-                <p style={{margin:0}}>{Number(bomb.priceInBNB).toFixed(2)} BTCB</p>
+                <p style={{ margin: 0 }}>{bomb.priceInDollars}</p>
+                <p style={{ margin: 0 }}>{Number(bomb.priceInBNB).toFixed(2)} BTCB</p>
               </td>
               <td style={{ padding: '0 10px 5px 10px' }}>
                 <Box style={{ cursor: 'pointer' }} onClick={() => bombFinance.watchAssetInMetamask(bomb.name)}>
-                  <img src={bomb.metaMaskFox} alt="img" />
+                  {/* <img src={bomb.metaMaskFox} alt="img" /> */}
+                  <TokenSymbol symbol="METAMASKFOX" size={35} />
                 </Box>
               </td>
             </tr>

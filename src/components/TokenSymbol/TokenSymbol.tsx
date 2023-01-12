@@ -12,6 +12,9 @@ import tBondLogo from '../../assets/img/bbond.png';
 import bombFtmLpLogo from '../../assets/img/bomb-bitcoin-LP.png';
 import bshareFtmLpLogo from '../../assets/img/bshare-bnb-LP.png';
 import busmBusdLpLogo from '../../assets/img/busm-busd-lp.png';
+import metamaskFox from '../../assets/img/metamask-fox.svg';
+import bombBtcLp from '../../assets/img/bomb-btc-lp-512.png';
+
 
 
 import bnbLogo from '../../assets/img/bnb.png';
@@ -20,6 +23,7 @@ import btcLogo from '../../assets/img/BCTB-icon.png';
 const logosBySymbol: {[title: string]: string} = {
   //Real tokens
   //=====================
+  METAMASKFOX:metamaskFox,
   BOMB: bombLogo,
   BOMBPNG: bombLogoPNG,
   BSHAREPNG: tShareLogoPNG,
@@ -49,6 +53,8 @@ const logosBySymbol: {[title: string]: string} = {
     '80BSHARE-20WBNB-LP': bshareFtmLpLogo,
   'BSHARE-BNB-APELP': bshareFtmLpLogo,
   'BOMB-BTCB-APELP': bombFtmLpLogo,
+
+  'BBOND-FARM':bombBtcLp
 };
 
 type LogoProps = {

@@ -3,12 +3,6 @@ import useBombStats from "./useBombStats";
 import useBondStats from "./useBondStats";
 import usebShareStats from './usebShareStats';
 
-import bombIcon from '../assets/img/bomb.png';
-import bshareIcon from '../assets/img/bshares.png';
-import bBondIcon from '../assets/img/bbond.png';
-import metaMaskFox from '../assets/img/metamask-fox.svg';
-
-
 const useAllBombs= ()=>{
 
     // Bomb
@@ -57,32 +51,29 @@ const useAllBombs= ()=>{
     useEffect(()=>{
     const bombs = [{
         name:'BOMB',
-        icon: bombIcon,
         currentSupply:bombCirculatingSupply,
         totalSupply:bombTotalSupply,
         priceInDollars:bombPriceInDollars,
         priceInBNB:bombPriceInBNB,
-        metaMaskFox
+    
 
     },
 
 {
     name:'BSHARE',
-    icon:bshareIcon,
     currentSupply:bShareCirculatingSupply,
     totalSupply:bShareTotalSupply,
     priceInDollars:bSharePriceInDollars,
     priceInBNB:bSharePriceInBNB,
-    metaMaskFox
+
 },
 {
     name:'BBOND',
-    icon:bBondIcon,
     currentSupply:tBondCirculatingSupply,
     totalSupply:tBondTotalSupply,
     priceInDollars:tBondPriceInDollars,
     priceInBNB:tBondPriceInBNB,
-    metaMaskFox
+
 }
 ];
         setAllBombs(bombs);
