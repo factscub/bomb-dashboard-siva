@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography } from '@material-ui/core';
 import CountUp from 'react-countup';
 import moment from 'moment';
@@ -32,6 +32,7 @@ import useStakedBalanceOnBoardroom from '../../hooks/useStakedBalanceOnBoardroom
 import useStakedTokenPriceInDollars from '../../hooks/useStakedTokenPriceInDollars';
 import useBombFinance from '../../hooks/useBombFinance';
 import BombDetails from '../../components/BombDetails';
+import TokenSymbol from '../../components/TokenSymbol';
 const BackgroundImage = createGlobalStyle`
   body {
     background: url(${HomeImage}) repeat !important;
@@ -93,6 +94,8 @@ const Dashboard: React.FC = () => {
     [boardroomAPR],
   );
 
+
+  const [bomFarmsArray, setBombFarmsArray]= useState([])
   // console.log(boardroomDailyReturns);
 
   return (
@@ -151,6 +154,8 @@ const Dashboard: React.FC = () => {
           style={{
             ...boxStyles,
             border: 0,
+            margin:0,
+            padding:0,
             background: 'transparent',
             display: 'flex',
             justifyContent: 'space-between',
@@ -185,14 +190,15 @@ const Dashboard: React.FC = () => {
               <BoxHeading
                 heading="Boardroom"
                 description="Stake BSHARE and earn BOMB every epoch"
-                icon={bshareIcon}
+                symbol='BSHARE'
                 showWrapper={true}
                 tvl={roundAndFormatNumber(Number(boardroomTVL), 0)}
               />
               <Typography style={{ display: 'flex', justifyContent: 'flex-end', padding: 5 }}>
                 Total Staked:{' '}
                 <Box style={{ width: 20 }}>
-                  <img style={{ maxWidth: '100%' }} src={bshareIcon} alt="img" />
+                  <TokenSymbol size={20} symbol='BSHARE' />
+                  {/* <img style={{ maxWidth: '100%' }} src={bshareIcon} alt="img" /> */}
                 </Box>{' '}
                 {Number(getDisplayBalance(totalStaked)).toFixed(0)}
               </Typography>
@@ -217,10 +223,24 @@ const Dashboard: React.FC = () => {
         </Box>
 
         {/* third box */}
-        <Box style={boxStyles}></Box>
+        <Box style={boxStyles}>
+
+
+          <BoxHeading heading='Bomb Farms' description='Stake your LP tokens in our farms to start earning $BSHARE' />
+
+          {
+            bomFarmsArray.map((bombObject,i)=>{
+
+            })
+          }
+        </Box>
 
         {/* forth box */}
-        <Box style={boxStyles}></Box>
+        <Box style={boxStyles}>
+          <BoxHeading heading='Bonds' description='BBOND can be purchased only on contraction periods, when TWAP of BOMB is below 1'
+          symbol='BBOND'
+          />
+        </Box>
       </Container>
     </Page>
   );

@@ -1,15 +1,16 @@
 import { Box, Typography } from '@material-ui/core';
 import React from 'react';
+import TokenSymbol from '../TokenSymbol';
 
 type BoxHeading = {
-  icon?: string;
+  symbol?: string;
   showWrapper?: boolean;
   tvl?: string;
   description: string;
   heading: string;
 };
 
-const BoxHeading: React.FC<BoxHeading> = ({ icon, showWrapper, tvl, description, heading }) => {
+const BoxHeading: React.FC<BoxHeading> = ({ symbol, showWrapper, tvl, description, heading }) => {
   return (
     <Box
       style={{
@@ -19,9 +20,10 @@ const BoxHeading: React.FC<BoxHeading> = ({ icon, showWrapper, tvl, description,
       }}
     >
       <Box style={{ display: 'flex', alignItems: 'center' }}>
-        {!!icon && (
+        {!!symbol && (
           <Box style={{ minHeight: 35, maxWidth: 50 }}>
-            <img style={{ maxWidth: '100%' }} src={icon} alt="img" />
+            <TokenSymbol symbol={symbol} size={50}/>
+            {/* <img style={{ maxWidth: '100%' }} src={symbol} alt="img" /> */}
           </Box>
         )}
 
