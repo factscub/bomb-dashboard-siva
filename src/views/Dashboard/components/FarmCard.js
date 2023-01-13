@@ -17,10 +17,12 @@ import useTokenBalance from '../../../hooks/useTokenBalance';
 import useStake from '../../../hooks/useStake';
 import WithdrawModal from '../../Bank/components/WithdrawModal';
 import useWithdraw from '../../../hooks/useWithdraw';
+import useApprove, { ApprovalState } from '../../../hooks/useApprove';
 
 const FarmCard = ({ bank }) => {
 
     let statsOnPool = useStatsForPool(bank);
+    const [approveStatus, approve] = useApprove(bank.depositToken, bank.address);
 
     const { onReward } = useHarvest(bank);
 
@@ -86,7 +88,7 @@ const FarmCard = ({ bank }) => {
 
     return (
         <>
-           
+
             <BoxHeading
                 marginTop={15}
                 heading={bank?.depositTokenName}
@@ -107,14 +109,25 @@ const FarmCard = ({ bank }) => {
 
             >
                 <Box style={{ display: 'flex', alignItems: 'center' }}>
-                    <FancyButton marginLeft={30} symbol='UP' text='Deposit' disabled={bank.closedForStaking} onClick={() => (bank.closedForStaking ? null : onPresentDeposit())}
-                    />
-                    <FancyButton symbol='DOWN' marginLeft={30} text='Withdraw' onClick={onPresentWithdraw} />
+                    {
+                        approveStatus !== ApprovalState.APPROVED ?
+                            <FancyButton text={`Approve ${bank?.depositTokenName}`} disabled={
+                                bank.closedForStaking ||
+                                approveStatus === ApprovalState.PENDING ||
+                                approveStatus === ApprovalState.UNKNOWN
+                            }
+                                onClick={approve} />
+                            :
+                            <>
+                                <FancyButton marginLeft={30} symbol='UP' text='Deposit' disabled={bank.closedForStaking} onClick={() => (bank.closedForStaking ? null : onPresentDeposit())}
+                                />
+                                <FancyButton symbol='DOWN' marginLeft={30} text='Withdraw' onClick={onPresentWithdraw} /></>
+                    }
                     <FancyButton text='Claim Rewards' marginLeft={30} onClick={onReward} disabled={earnings.eq(0)} />
                 </Box>
 
             </BombDetails>
-          
+
         </>
     )
 };
