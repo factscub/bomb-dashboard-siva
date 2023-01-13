@@ -16,8 +16,17 @@ import FancyButton from '../../../components/FancyButton';
 import WithdrawModal from '../../Boardroom/components/WithdrawModal';
 import useModal from '../../../hooks/useModal';
 import { BombFinanceSummaryProps } from '../type';
+import useWithdrawFromBoardroom from '../../../hooks/useWithdrawFromBoardroom';
+import useWithdrawCheck from '../../../hooks/boardroom/useWithdrawCheck';
+import DepositModal from '../../Boardroom/components/DepositModal';
+import useTokenBalance from '../../../hooks/useTokenBalance';
+import useStakeToBoardroom from '../../../hooks/useStakeToBoardroom';
+import useHarvestFromBoardroom from '../../../hooks/useHarvestFromBoardroom';
+import useClaimRewardCheck from '../../../hooks/boardroom/useClaimRewardCheck';
+import useApprove, { ApprovalState } from '../../../hooks/useApprove';
+import { Link } from 'react-router-dom';
 
-export const Boardroom:React.FC<BombFinanceSummaryProps> = (boxStyles) => {
+export const Boardroom: React.FC<BombFinanceSummaryProps> = (boxStyles) => {
   const totalStaked = useTotalStakedOnBoardroom();
   const boardroomTVL = useBoardroomTVL().toString();
   const boardroomAPR = useFetchBoardroomAPR();
@@ -25,6 +34,8 @@ export const Boardroom:React.FC<BombFinanceSummaryProps> = (boxStyles) => {
   const boardroomEarnings = useEarningsOnBoardroom();
   const bombStats = useBombStats();
   const boardroomStakedBalance = useStakedBalanceOnBoardroom();
+
+  const [approveStatus, approve] = useApprove(bombFinance.BSHARE, bombFinance.contracts.Boardroom.address);
 
   const boardroomDailyReturns = React.useMemo(
     () => (boardroomAPR ? Number(boardroomAPR / 365).toFixed(2) : null),
@@ -49,19 +60,36 @@ export const Boardroom:React.FC<BombFinanceSummaryProps> = (boxStyles) => {
     Number(boardroomBombTokenPriceInDollars) * Number(getDisplayBalance(boardroomEarnings))
   ).toFixed(2);
 
+  const { onWithdraw } = useWithdrawFromBoardroom();
+  const canWithdrawFromBoardroom = useWithdrawCheck();
 
-  
-//   const [onPresentWithdraw, onDismissWithdraw] = useModal(
-//     <WithdrawModal
-//       max={stakedBalance}
-//       onConfirm={(value) => {
-//         onWithdraw(value);
-//         onDismissWithdraw();
-//       }}
-//       tokenName={'BShare'}
-//     />,
-//   );
+  const [onPresentWithdraw, onDismissWithdraw] = useModal(
+    <WithdrawModal
+      max={boardroomStakedBalance}
+      onConfirm={(value) => {
+        onWithdraw(value);
+        onDismissWithdraw();
+      }}
+      tokenName={'BShare'}
+    />,
+  );
 
+  const tokenBalance = useTokenBalance(bombFinance.BSHARE);
+  const { onStake } = useStakeToBoardroom();
+
+  const [onPresentDeposit, onDismissDeposit] = useModal(
+    <DepositModal
+      max={tokenBalance}
+      onConfirm={(value) => {
+        onStake(value);
+        onDismissDeposit();
+      }}
+      tokenName={'BShare'}
+    />,
+  );
+
+  const { onReward } = useHarvestFromBoardroom();
+  const canClaimReward = useClaimRewardCheck();
 
   return (
     <Box
@@ -77,9 +105,8 @@ export const Boardroom:React.FC<BombFinanceSummaryProps> = (boxStyles) => {
     >
       <Box style={{ width: '60%', textAlign: 'center' }}>
         <Typography style={{ textAlign: 'right' }}>
-          <a style={{ color: '#9EE6FF' }} href="/">
-            Read Investment Strategy
-          </a>
+         
+          <Link to={'#'} style={{color:' #9EE6FF'}}>Read Investment Strategy</Link>
         </Typography>
         <Typography
           style={{
@@ -93,10 +120,42 @@ export const Boardroom:React.FC<BombFinanceSummaryProps> = (boxStyles) => {
         >
           Invest Now
         </Typography>
-        <Box display="flex" justifyContent="space-between">
+        <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
           {' '}
-          <Typography style={{ width: '48%', background: 'blue' }}>df</Typography>
-          <Typography style={{ width: '48%', background: 'blue' }}>df</Typography>
+          <Typography style={{ width: '48%', background: 'rgba(255, 255, 255, 0.5)' }}>
+            <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3px 0' }}>
+              <Box style={{ borderRadius: '50%', background: 'white', width: 26, height: 26 }}>
+                <TokenSymbol size={24} symbol="DISCORD" />
+              </Box>
+              <Typography style={{ fontWeight: 700, marginLeft: 10 }}>
+                <a
+                  href="https://discord.bomb.money"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  style={{ color: 'black', textDecoration: 'none' }}
+                >
+                  Chat On Discord
+                </a>
+              </Typography>
+            </Box>
+          </Typography>
+          <Typography style={{ width: '48%', background: 'rgba(255, 255, 255, 0.5)' }}>
+            <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3px 0' }}>
+              <Box style={{ borderRadius: '50%', background: 'white', width: 26, height: 26 }}>
+                <TokenSymbol size={22} symbol="DOC" />
+              </Box>
+              <Typography style={{ fontWeight: 700, marginLeft: 10 }}>
+                <a
+                  href="https://docs.bomb.money"
+                  style={{ color: 'black', textDecoration: 'none' }}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Read Doc
+                </a>
+              </Typography>
+            </Box>
+          </Typography>
         </Box>
 
         {/* Boardroom box */}
@@ -129,23 +188,46 @@ export const Boardroom:React.FC<BombFinanceSummaryProps> = (boxStyles) => {
             stakeIcon="BSHARE"
             earnedIcon="BOMB"
           >
-            <Box style={{ padding:'0 0 0 110px' , display: 'flex', alignItems: 'center' ,justifyContent:'space-between' , flexWrap:'wrap' }}>
-              <FancyButton
-                symbol="UP"
-                text="Deposit"
-                // disabled={bank.closedForStaking}
-                // onClick={() => (bank.closedForStaking ? null : onPresentDeposit())}
-              />
-              <FancyButton
-                symbol="DOWN"
-                text="Withdraw"
-                // onClick={onPresentWithdraw}
-                //   onClick={onPresentWithdraw}
-              />
+            <Box
+              style={{
+                padding: '0 0 0 110px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+              }}
+            >
+              {approveStatus !== ApprovalState.APPROVED ? (
+                <FancyButton
+                  disabled={approveStatus !== ApprovalState.NOT_APPROVED}
+                  onClick={approve}
+                  text="Approve BSHARE"
+                  width="100%"
+                />
+              ) : (
+                <>
+                  <FancyButton
+                    symbol="UP"
+                    text="Deposit"
+                    onClick={onPresentDeposit}
+
+                    // disabled={approveStatus !== ApprovalState.APPROVED}
+                  />
+                  <FancyButton
+                    symbol="DOWN"
+                    text="Withdraw"
+                    // disabled={approveStatus !== ApprovalState.APPROVED || !canWithdrawFromBoardroom}
+                    disabled={!canWithdrawFromBoardroom}
+                    onClick={onPresentWithdraw}
+                  />
+                </>
+              )}
+
               <FancyButton
                 text="Claim Rewards"
-                width='100%'
-                //   onClick={onReward} disabled={earnings.eq(0)}
+                width="100%"
+                onClick={onReward}
+                disabled={boardroomEarnings.eq(0) || !canClaimReward}
               />
             </Box>
           </BombDetails>

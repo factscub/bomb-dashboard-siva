@@ -24,6 +24,9 @@ import up from '../../assets/img/up.png';
 import down from '../../assets/img/down.png';
 import cart from '../../assets/img/cart.png';
 
+import discord from '../../assets/img/discord.png'
+import doc from '../../assets/img/doc.png'
+
 const logosBySymbol: {[title: string]: string} = {
   //Real tokens
   //=====================
@@ -62,7 +65,9 @@ const logosBySymbol: {[title: string]: string} = {
 
   UP:up,
   DOWN:down,
-  CART:cart
+  CART:cart,
+  DISCORD:discord,
+  DOC:doc
 };
 
 
