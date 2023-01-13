@@ -15,19 +15,9 @@ import useBombStats from '../../../hooks/useBombStats';
 import FancyButton from '../../../components/FancyButton';
 import WithdrawModal from '../../Boardroom/components/WithdrawModal';
 import useModal from '../../../hooks/useModal';
+import { BombFinanceSummaryProps } from '../type';
 
-const boxStyles = {
-  backgroundColor: 'rgba(35, 40, 75, 0.75)',
-  borderRadius: '10px',
-  boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-  backdropFilter: 'blur(5.5px)',
-  padding: '15px',
-  border: '1px solid #728CDF',
-  margin: ' 10px 0',
-  color: 'white',
-};
-
-export const Boardroom = () => {
+export const Boardroom:React.FC<BombFinanceSummaryProps> = (boxStyles) => {
   const totalStaked = useTotalStakedOnBoardroom();
   const boardroomTVL = useBoardroomTVL().toString();
   const boardroomAPR = useFetchBoardroomAPR();

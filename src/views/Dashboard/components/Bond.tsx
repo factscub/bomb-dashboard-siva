@@ -10,18 +10,9 @@ import TokenSymbol from '../../../components/TokenSymbol';
 import { getDisplayBalance } from '../../../utils/formatBalance';
 import BoxHeading from '../../../components/BoxHeading';
 import ButtonChange from './ButtonChange';
+import { BombFinanceSummaryProps } from '../type';
 
-const boxStyles = {
-  backgroundColor: 'rgba(35, 40, 75, 0.75)',
-  borderRadius: '10px',
-  boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-  backdropFilter: 'blur(5.5px)',
-  padding: '15px',
-  border: '1px solid #728CDF',
-  margin: ' 10px 0',
-  color: 'white',
-};
-const Bond: React.FC = () => {
+const Bond: React.FC<BombFinanceSummaryProps> = (boxStyles) => {
   const bombFinance = useBombFinance();
   const addTransaction = useTransactionAdder();
   const bondStat = useBondStats();
