@@ -57,7 +57,7 @@ const ButtonChange: React.FC<ButtonChangeProps> = ({
         <>
           {approveStatus !== ApprovalState.APPROVED && !disabled ? (
             <FancyButton
-              text={action}
+              text={`Approve ${fromTokenName}`}
               symbol={symbol}
               disabled={approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN}
               onClick={() => catchError(approve(), `Unable to approve ${fromTokenName}`)}
