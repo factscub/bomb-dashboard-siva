@@ -9,6 +9,8 @@ import Bond from './components/Bond';
 import { BombFarms } from './components/BombFarms';
 import { Boardroom } from './components/Boardroom';
 import BombFinanceSummary from './components/BombFinanceSummary';
+import useWallet from 'use-wallet';
+import UnlockWallet from '../../components/UnlockWallet';
 
 const BackgroundImage = createGlobalStyle`
   body {
@@ -22,7 +24,7 @@ const BackgroundImage = createGlobalStyle`
 const TITLE = 'bomb.money | Dashboard';
 
 const boxStyles = {
-  backgroundColor: 'rgba(35, 40, 75, 0.75)', 
+  backgroundColor: 'rgba(35, 40, 75, 0.75)',
   borderRadius: '10px',
   boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
   backdropFilter: 'blur(5.5px)',
@@ -33,6 +35,7 @@ const boxStyles = {
 };
 
 const Dashboard: React.FC = () => {
+  const { account } = useWallet();
   return (
     <Page>
       <BackgroundImage />
@@ -42,16 +45,21 @@ const Dashboard: React.FC = () => {
 
       <Container size="lg">
         {/* first box i.e, bomb finance summary*/}
-        <BombFinanceSummary  {...boxStyles}/>
+        <BombFinanceSummary {...boxStyles} />
+        {!!account ? (
+          <>
+            {/* second box i.e, boardroom*/}
+            <Boardroom {...boxStyles} />
 
-        {/* second box i.e, boardroom*/}
-        <Boardroom {...boxStyles} />
+            {/* third box i.e, bomb farms */}
+            <BombFarms {...boxStyles} />
 
-        {/* third box i.e, bomb farms */}
-        <BombFarms {...boxStyles}/>
-
-        {/* forth box i.e, bonds */}
-        <Bond {...boxStyles} />
+            {/* forth box i.e, bonds */}
+            <Bond {...boxStyles} />
+          </>
+        ) : (
+          <UnlockWallet />
+        )}
       </Container>
     </Page>
   );
