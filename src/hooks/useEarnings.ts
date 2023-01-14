@@ -21,7 +21,7 @@ const useEarnings = (poolName: ContractName, earnTokenName: String, poolId: Numb
       const refreshBalance = setInterval(fetchBalance, config.refreshInterval);
       return () => clearInterval(refreshBalance);
     }
-  }, [isUnlocked, poolName, bombFinance, fetchBalance]);
+  }, [isUnlocked, fetchBalance]);
 
   return balance;
 };

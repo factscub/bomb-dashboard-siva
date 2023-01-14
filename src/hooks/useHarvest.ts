@@ -3,7 +3,7 @@ import useBombFinance from './useBombFinance';
 import useHandleTransactionReceipt from './useHandleTransactionReceipt';
 import {Bank} from '../bomb-finance';
 
-const useHarvest = (bank: Bank) => {
+const useHarvest = (bank: Bank | null) => {
   const bombFinance = useBombFinance();
   const handleTransactionReceipt = useHandleTransactionReceipt();
 

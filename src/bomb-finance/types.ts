@@ -1,6 +1,6 @@
 import ERC20 from './ERC20';
 
-export type ContractName = string;
+export type ContractName = string | null;
 
 export interface BankInfo {
   name: string;
